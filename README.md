@@ -138,7 +138,7 @@ testapp
 ```
 
 
-####ß Following command is used to deploy the application in the namespace appns
+#### Following command is used to deploy the application in the namespace appns
 ```bash
 helm upgrade --install testapp infrastore \
   --namespace appns --create-namespace \
