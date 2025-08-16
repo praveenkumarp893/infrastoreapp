@@ -138,8 +138,9 @@ testapp
 ```
 
 
-
 ## Following command is used to deploy the application in the namespace appns
+```bash
 helm upgrade --install testapp infrastore \
   --namespace appns --create-namespace \
   --set-string secret.DJANGO_SUPERUSER_PASSWORD="$DJANGO_PASSWORD"
+```
