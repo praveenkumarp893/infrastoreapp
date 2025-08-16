@@ -115,6 +115,7 @@ It integrates with **HashiCorp Vault** for secret management and supports PVCs f
 ---
 
 ## Chart Structure
+```tree
 testapp
 ├── jenkinsfile                         # Jenkinsfile for deployment 
 ├── README.md
@@ -134,6 +135,7 @@ testapp
     │   └── tests
     │       └── test-connection.yaml
     └── values.yaml             # Default Values for chart configuration
+```
 
 
 
