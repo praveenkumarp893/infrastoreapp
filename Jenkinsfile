@@ -17,12 +17,12 @@ spec:
   }
 
   stages {
-    stage('Checkout') {
+    stage('Checkout Helm Chart') {
       steps {
         checkout([$class: 'GitSCM',
-          branches: [[name: '*/main']], // change if different
+          branches: [[name: '*/main']],
           userRemoteConfigs: [[
-            url: 'https://github.com/praveenkumarp893/infrastore-app.git',
+            url: 'https://github.com/praveenkumarp893/infrastoreapp.git',
             credentialsId: 'git-creds'
           ]]
         ])
