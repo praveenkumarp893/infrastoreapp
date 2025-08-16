@@ -107,14 +107,14 @@ kubectl create clusterrolebinding jenkins-sa-binding \
   ```
 
 
-## Helm Chart: infrastore
+## 3. Helm Chart: infrastore
 
 This Helm chart (`infrastore`) is used to deploy the application into a Kubernetes cluster using Jenkins.  
 It integrates with **HashiCorp Vault** for secret management and supports PVCs for persistent storage.
 
 ---
 
-## Chart Structure
+#### Chart Structure
 ```tree
 testapp
 ├── jenkinsfile                         # Jenkinsfile for deployment 
@@ -138,7 +138,7 @@ testapp
 ```
 
 
-## Following command is used to deploy the application in the namespace appns
+####ß Following command is used to deploy the application in the namespace appns
 ```bash
 helm upgrade --install testapp infrastore \
   --namespace appns --create-namespace \
