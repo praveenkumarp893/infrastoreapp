@@ -1,0 +1,15 @@
+{{- range $name, $conf := .Values.persistence.volumes }}
+{{- if $conf.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "infrastore.fullname" $ }}-{{ $name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $conf.size }}
+---
+{{- end }}
+{{- end }}
