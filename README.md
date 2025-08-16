@@ -18,32 +18,32 @@ This guide explains how to set up a local Kubernetes environment (Docker Desktop
 
 ## 2. Install HashiCorp Vault (Dev Mode) and Add Django Password
 
-### Add Vault Helm repo
+#### Add Vault Helm repo
 ```bash
 helm repo add hashicorp https://helm.releases.hashicorp.com
 ```
 
-### Create Vault namespace
+#### Create Vault namespace
 ```bash
 kubectl create namespace vault`
 ```
-### Install Vault in dev mode
+#### Install Vault in dev mode
 ```bashß
 helm install -n vault vault hashicorp/vault --set "server.dev.enabled=true"
 ```
 
-### Enable Kubernetes authentication in Vault
+#### Enable Kubernetes authentication in Vault
 ```bash
 kubectl exec -it vault-0 -n vault -- vault auth enable kubernetes
 ```
 
-### Configure Kubernetes auth with the cluster's API server
+#### Configure Kubernetes auth with the cluster's API server
 ```bash
 kubectl exec -it vault-0 -n vault -- sh -c 'vault write auth/kubernetes/config \`
     `kubernetes_host=https://$KUBERNETES_PORT_443_TCP_ADDR:443'
 ```
 
-### Store Django superuser password
+#### Store Django superuser password
 ```bash
 kubectl exec -it vault-0 -n vault -- vault kv put secret/infrastore-app DJANGO_SUPERUSER_PASSWORD=secret123
 ```
@@ -52,12 +52,12 @@ kubectl exec -it vault-0 -n vault -- vault kv put secret/infrastore-app DJANGO_S
 
 ## 3. Install Nginx Ingress Controller
 
-### Create namespace for ingress
+#### Create namespace for ingress
 ```bash
 kubectl create namespace ingress-nginx
 ```
 
-### Install ingress-nginx via Helm
+#### Install ingress-nginx via Helm
 ```bash
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
@@ -68,18 +68,18 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
 
 ## 4. Install Jenkins
 
-### Add Jenkins repo
+#### Add Jenkins repo
 ```bash
 helm repo add jenkins https://charts.jenkins.io
 helm repo update
 ```
 
-### Create namespace for Jenkins
+#### Create namespace for Jenkins
 ```bash
 kubectl create namespace jenkins
 ```
 
-### Install Jenkins with ingress enabled
+#### Install Jenkins with ingress enabled
 ```bash
 helm upgrade --install jenkins jenkins/jenkins \
   --namespace jenkins \
@@ -95,7 +95,7 @@ helm upgrade --install jenkins jenkins/jenkins \
   ```
 
 
-### Give Jenkins Access to the Cluster
+#### Give Jenkins Access to the Cluster
 ```bash
 kubectl create serviceaccount jenkins-sa -n jenkins
 ```
