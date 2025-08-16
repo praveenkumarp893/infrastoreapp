@@ -18,48 +18,69 @@ This guide explains how to set up a local Kubernetes environment (Docker Desktop
 
 ## 2. Install HashiCorp Vault (Dev Mode) and Add Django Password
 
-# Add Vault Helm repo
+### Add Vault Helm repo
+```bash
 helm repo add hashicorp https://helm.releases.hashicorp.com
+```
 
-# Create Vault namespace
-kubectl create namespace vault
-
-# Install Vault in dev mode
+### Create Vault namespace
+```bash
+kubectl create namespace vault`
+```
+### Install Vault in dev mode
+```bashß
 helm install -n vault vault hashicorp/vault --set "server.dev.enabled=true"
+```
 
-# Enable Kubernetes authentication in Vault
+### Enable Kubernetes authentication in Vault
+```bash
 kubectl exec -it vault-0 -n vault -- vault auth enable kubernetes
+```
 
-# Configure Kubernetes auth with the cluster's API server
-kubectl exec -it vault-0 -n vault -- sh -c 'vault write auth/kubernetes/config \
-    kubernetes_host=https://$KUBERNETES_PORT_443_TCP_ADDR:443'
+### Configure Kubernetes auth with the cluster's API server
+```bash
+kubectl exec -it vault-0 -n vault -- sh -c 'vault write auth/kubernetes/config \`
+    `kubernetes_host=https://$KUBERNETES_PORT_443_TCP_ADDR:443'
+```
 
-# Store Django superuser password
+### Store Django superuser password
+```bash
 kubectl exec -it vault-0 -n vault -- vault kv put secret/infrastore-app DJANGO_SUPERUSER_PASSWORD=secret123
+```
 
+---
 
 ## 3. Install Nginx Ingress Controller
 
-# Create namespace for ingress
+### Create namespace for ingress
+```bash
 kubectl create namespace ingress-nginx
+```
 
-# Install ingress-nginx via Helm
+### Install ingress-nginx via Helm
+```bash
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
   --set controller.publishService.enabled=true \
   --set controller.replicaCount=1 \
   --set controller.service.type=LoadBalancer
+```
 
 ## 4. Install Jenkins
 
-# Add Jenkins repo
+### Add Jenkins repo
+```bash
 helm repo add jenkins https://charts.jenkins.io
 helm repo update
+```
 
-# Create namespace for Jenkins
+### Create namespace for Jenkins
+```bash
 kubectl create namespace jenkins
+```
 
-# Install Jenkins with ingress enabled
+### Install Jenkins with ingress enabled
+```bash
 helm upgrade --install jenkins jenkins/jenkins \
   --namespace jenkins \
   --set controller.serviceType=ClusterIP \
@@ -71,20 +92,24 @@ helm upgrade --install jenkins jenkins/jenkins \
   --set controller.admin.password=admin123 \
   --set persistence.enabled=false \
   --set controller.ingress.ingressClassName=nginx
+  ```
 
 
-# Give Jenkins Access to the Cluster
+### Give Jenkins Access to the Cluster
+```bash
 kubectl create serviceaccount jenkins-sa -n jenkins
+```
 
+```bash
 kubectl create clusterrolebinding jenkins-sa-binding \
   --clusterrole=cluster-admin \
   --serviceaccount=jenkins:jenkins-sa
+  ```
 
 
+## Helm Chart: infrastore
 
-# Helm Chart: testchart
-
-This Helm chart (`testchart`) is used to deploy the application into a Kubernetes cluster using Jenkins.  
+This Helm chart (`infrastore`) is used to deploy the application into a Kubernetes cluster using Jenkins.  
 It integrates with **HashiCorp Vault** for secret management and supports PVCs for persistent storage.
 
 ---
@@ -93,7 +118,7 @@ It integrates with **HashiCorp Vault** for secret management and supports PVCs f
 testapp
 ├── jenkinsfile                         # Jenkinsfile for deployment 
 ├── README.md
-└── testchart
+└── infrastore
     ├── Chart.yaml                      # Chart metadata
     ├── charts
     ├── templates
@@ -112,7 +137,7 @@ testapp
 
 
 
-# Following command is used to deploy the application in the namespace appns
-helm upgrade --install testapp testchart \
+## Following command is used to deploy the application in the namespace appns
+helm upgrade --install testapp infrastore \
   --namespace appns --create-namespace \
   --set-string secret.DJANGO_SUPERUSER_PASSWORD="$DJANGO_PASSWORD"
